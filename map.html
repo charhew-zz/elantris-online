@@ -1,0 +1,66 @@
+<html>
+<head>
+<style type="text/css">
+#map {
+	width: 1157px;
+	height: 762px;
+	margin: auto;
+	background: url("img/world-map.png");
+}
+
+.map-overlay {
+	position: relative;
+}
+
+.hotspot {
+	position: absolute;
+}
+
+.volcano {
+	left: 169px;
+	top: 52px;
+	width: 152px;
+	height: 145px;
+	border: 1px solid red;
+}
+
+.tree {
+	left: 422px;
+	top: 325px;
+	width: 95px;
+	height: 120px;
+	border: 1px solid red;
+}
+
+.mansion {
+	left: 854px;
+	top: 127px;
+	width: 100px;
+	height: 76px;
+	border: 1px solid red;
+}
+
+.lighthouse {
+	left: 1025px;
+	top: 445px;
+	width: 51px;
+	height: 117px;
+	border: 1px solid red;
+}
+
+
+</style>
+</head>
+<body>
+<div id="map">
+	<div class="map-overlay">
+		<a href="#"><div class="hotspot volcano"></div></a>
+		<a href="#"><div class="hotspot tree"></div></a>
+		<a href="#"><div class="hotspot mansion"></div></a>
+		<a href="#"><div class="hotspot lighthouse"></div></a>
+	</div>
+	<div class="map-inner">
+	</div>
+</div>
+</body>
+</html>
