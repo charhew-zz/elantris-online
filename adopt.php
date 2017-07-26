@@ -1,6 +1,19 @@
 <?php
+
 session_start();
+require_once("connect.php");
+if (!isset($_SESSION['userid'])){
+    $loggedin = false;
+}
+
+$userid = $_SESSION['userid'];
+$name = $_SESSION['name'];
+//if(isset($sid)) {unset($sid);}
+$sid = isset($_GET['sid']) ? $_GET['sid'] : '';
+
+
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -28,6 +41,10 @@ session_start();
             width: 100%;
         }
         
+        .species-img-confirm{
+            width: 25%;
+        }
+        
         .species-info{
             background-color: #fff;
             text-align: center;
@@ -44,6 +61,11 @@ session_start();
             color: #222;
         }
         
+        form{
+            margin-bottom: 0px;
+            text-align: center;
+        }
+        
     </style>
 
 
@@ -53,14 +75,35 @@ session_start();
 
        
     <!-- Page Content -->
-   <div class="container">
+   <div class="container" style="text-align:center;">
             <div class="row">
                 <div class="twelve columns">
-                    <h1>Elantris Online - Adopt</h1>
+                    <?php
+                        $sql = "SELECT * FROM elantris_db.tbl_pets WHERE user_id=" . $user_id . "";
+                        $result = $conn->query($sql);
+                    if ($result->num_rows == 0) {
+                        if($sid == ''){
+                          echo "<h1>Adopt a pet!</h1>
+                              <p>All users are currently limited to <strong>one</strong> pet.</p>";
+                        }else{
+                            echo "<h1>Confirm your pet!</h1>
+                              <p>Is this the pet you want to choose?</p>";
+                        }
+                   }else{
+                        echo "<h1>Nice try " . $name . "!</h1>
+                              <p>You already have a pet! Keep exploring Elantris and give some other players a chace to adopt.</p>";
+                    }
+
+                    ?>
+                    
+
                 </div>
             </div>
                 <?php 
-                    require_once("connect.php");
+//                    if($loggedin == false){
+//                        echo '<h2>You need to login to adopt a pet!</h2>'
+//                    }else
+                        if($sid == ''){
                     $i=1;
                     $sql = "SELECT * FROM elantris_db.tbl_species";
                     $result = $conn->query($sql);
@@ -88,6 +131,32 @@ session_start();
                             }
                         
                         }
+                    }else{
+                         $sql = "SELECT * FROM elantris_db.tbl_species WHERE species_id = ". $sid ."";
+                        $result = $conn->query($sql);
+                        while($row = $result->fetch_assoc()) {
+                        
+                        echo '<div class="row">';
+                            
+                        $s_id = $row["species_id"];
+                        $species = $row["species"];
+                        $imagename = $row["imgname"];
+                        $bio = $row["bio"];
+
+                        echo '<img class="species-img-confirm" src="pet/'. $imagename . '"/><h4 class="species-title">'. $species .'</h4><p>'. $bio .'</p></div>';
+                            
+                            
+       
+                        }
+                  echo '<div class="row">
+                <div class="twelve columns">
+                 <form action="" method="post" enctype="post">
+                <input type="hidden" name="sid" value='. $sid .'>
+                <label>Name of pet</label><input type="text" name="petname" required><br>
+                <input type="submit" value="Adopt Pet" name="submit">
+                </form>
+                <a class="button button-primary" href="adopt.php">Go Back</a>';
+                    }
                   
                 ?>
     </div>
