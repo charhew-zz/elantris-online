@@ -1,8 +1,8 @@
 <?php
-    
+session_start();
 if ($_SERVER['REQUEST_METHOD'] == 'POST'){
  require_once("connect.php");
-session_start();
+
 // Store Session Data
 $name = $_POST["name"];
 $pass = $_POST["password"];
@@ -17,6 +17,7 @@ if ($result->num_rows > 0) {
     // output data of each row
     while($row = $result->fetch_assoc()) {
         $securepass = $row["password"];
+        $userid = $row["user_id"];
     }
 } else {
     $login_msg = 2;  
@@ -24,8 +25,8 @@ if ($result->num_rows > 0) {
     $auth = password_verify($pass, $securepass);
 
     if($auth == true){
-        $_SESSION['username'] = $name;
-        $_SESSION['userid'] = $userid;
+        $_SESSION["name"] = $name;
+        $_SESSION["userid"] = $userid;
         $login_msg = 1;  
     }else{
       $login_msg = 2;  
@@ -76,7 +77,7 @@ if ($result->num_rows > 0) {
                         <input type="submit" value="Login" name="submit">
                         <?php
                         if($login_msg == 1){
-                            echo '<p id="login-msg">Login successful, redirecting</p>';
+                            echo '<p id="login-msg">Login successful for <strong>' . $name . '</strong>, redirecting</p>';
                             echo "<script>
                                 (function() {
                                    setTimeout(function(){

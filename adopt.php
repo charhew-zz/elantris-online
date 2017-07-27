@@ -2,15 +2,15 @@
 
 session_start();
 require_once("connect.php");
-if (!isset($_SESSION['userid'])){
+if (!isset($_SESSION["userid"])){
     $loggedin = false;
 }
 
-$userid = $_SESSION['userid'];
-$name = $_SESSION['name'];
+$userid = $_SESSION["userid"];
+$name = $_SESSION["name"];
 //if(isset($sid)) {unset($sid);}
 $sid = isset($_GET['sid']) ? $_GET['sid'] : '';
-
+$haspet = false;
 
 ?>
 
@@ -79,19 +79,23 @@ $sid = isset($_GET['sid']) ? $_GET['sid'] : '';
             <div class="row">
                 <div class="twelve columns">
                     <?php
-                        $sql = "SELECT * FROM elantris_db.tbl_pets WHERE user_id=" . $user_id . "";
+                        $sql = 'SELECT * FROM elantris_db.tbl_pets WHERE user_id=' . $userid .'';
                         $result = $conn->query($sql);
-                    if ($result->num_rows == 0) {
+
+                    if ($result->num_rows == 1) {
+                         echo "<h1>Nice try " . $name . "!</h1>
+                              <p>You already have a pet! Keep exploring Elantris and give some other players a chace to adopt.</p>";
+                        $haspet = true;
+                   }else{
                         if($sid == ''){
                           echo "<h1>Adopt a pet!</h1>
                               <p>All users are currently limited to <strong>one</strong> pet.</p>";
+                            echo $userid . " + " . $name;
                         }else{
                             echo "<h1>Confirm your pet!</h1>
                               <p>Is this the pet you want to choose?</p>";
                         }
-                   }else{
-                        echo "<h1>Nice try " . $name . "!</h1>
-                              <p>You already have a pet! Keep exploring Elantris and give some other players a chace to adopt.</p>";
+                       
                     }
 
                     ?>
@@ -100,6 +104,8 @@ $sid = isset($_GET['sid']) ? $_GET['sid'] : '';
                 </div>
             </div>
                 <?php 
+                               if($haspet == false){
+
 //                    if($loggedin == false){
 //                        echo '<h2>You need to login to adopt a pet!</h2>'
 //                    }else
@@ -150,13 +156,14 @@ $sid = isset($_GET['sid']) ? $_GET['sid'] : '';
                         }
                   echo '<div class="row">
                 <div class="twelve columns">
-                 <form action="" method="post" enctype="post">
+                 <form action="adopt-confirm.php" method="post" enctype="post">
                 <input type="hidden" name="sid" value='. $sid .'>
                 <label>Name of pet</label><input type="text" name="petname" required><br>
                 <input type="submit" value="Adopt Pet" name="submit">
                 </form>
                 <a class="button button-primary" href="adopt.php">Go Back</a>';
                     }
+                               }
                   
                 ?>
     </div>

@@ -5,7 +5,9 @@ require_once("connect.php");
 
 $userid = $_SESSION['userid'];
 $name = $_SESSION['name'];
-$sid = $_GET['sid'];
+$petname = $_POST['petname'];
+$sid = $_POST['sid'];
+
 
 
 ?>
@@ -71,11 +73,23 @@ $sid = $_GET['sid'];
             <div class="row">
                 <div class="twelve columns" style="text-align:center;">
                     <?php
-                        $sql = "SELECT * FROM elantris_db.tbl_pets WHERE user_id=" . $user_id . "";
+                        $sql = "SELECT * FROM elantris_db.tbl_pets WHERE user_id=" . $userid . "";
                         $result = $conn->query($sql);
                     if ($result->num_rows == 0) {
-                          echo "<h1>Confirm your pet!</h1>
-                              <p>Is this the pet you want to choose?</p>";
+                          echo "<h1>Congratulations!</h1>
+                              <p>You have adopted a new pet</p>";
+                        
+                         /* CONFIRM ADOPTION*/
+                        $sql = "INSERT INTO elantris_db.tbl_pets (user_id, species_id, petname) VALUES ('" . $userid . "', '" . $sid .  "', '" . $petname . "')";
+
+                        if ($conn->query($sql) === TRUE) {
+                                echo "PET CREATED";
+                        } else {
+                            echo "Whoops, we couldn't find them in the shelter";
+                        }
+                       
+
+                        
                    }else{
                         echo "<h1>Nice try " . $name . "!</h1>
                               <p>You already have a pet! Keep exploring Elantris and give some other players a chace to adopt.</p>";
@@ -110,9 +124,9 @@ $sid = $_GET['sid'];
             <div class="row">
                 <div class="twelve columns">
                     <form action="" method="post" enctype="post">
-                        <input type="hidden" name="sid" value=< ?php echo $sid; ?>>
                         <input type="submit" value="Adopt Pet" name="submit">
                     </form>
+                    
                     <a class="button button-primary" href="adopt.php">Go Back</a>;
 
                 </div>
